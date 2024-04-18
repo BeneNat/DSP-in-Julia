@@ -4,12 +4,12 @@ using LinearAlgebra
 
 author = Dict{Symbol, String}(
     :index => "123456",
-    :name  => "Szymon WoĹşniak",
+    :name  => "Szymon Wozniak",
     :email => "szymon.wozniak@agh.edu.pl",
     :group => "0",
 )
 
-# SygnaĹy ciÄgĹe
+# Sygnaly ciagle
 cw_rectangular(t::Real; T=1.0)::Real = missing
 cw_triangle(t::Real; T=1.0)::Real = missing
 cw_literka_M(t::Real; T=1.0)::Real = missing
@@ -55,9 +55,9 @@ end
 
 
 
-# SygnaĹy dyskretne
-kronecker(n::Integer)::Real = missing
-heaviside(n::Integer)::Real = missing
+# Sygnaly dyskretne
+kronecker(n::Integer)::Real = n == 0 ? 1 : 0
+heaviside(n::Integer)::Real = n<0 ? 0 : 1
 
 # Okna
 rect(N::Integer)::AbstractVector{<:Real} = missing
@@ -66,12 +66,12 @@ hanning(N::Integer)::AbstractVector{<:Real} = missing
 hamming(N::Integer)::AbstractVector{<:Real} = missing
 blackman(N::Integer)::AbstractVector{<:Real} = missing
 
-# Parametry sygnaĹĂłw
-mean(x::AbstractVector)::Number = missing
-peak2peak(x::AbstractVector)::Real = missing
-energy(x::AbstractVector)::Real = missing
-power(x::AbstractVector)::Real = missing
-rms(x::AbstractVector)::Real = missing
+# Parametry sygnalow
+mean(x::AbstractVector)::Number = sum(x)/length(x)
+peak2peak(x::AbstractVector)::Real = max(x) - min(x)
+energy(x::AbstractVector)::Real = sum(x.*x)
+power(x::AbstractVector)::Real = sum(x.*x)/length(x)
+rms(x::AbstractVector)::Real = sqrt(sum(x.*x)/length(x))
 
 function running_mean(x::AbstractVector, M::Integer)::Vector
     missing
@@ -133,11 +133,11 @@ function ifft_radix2_dif_r(X::AbstractVector)::Vector
 end
 
 function fft(x::AbstractVector)::Vector
-    dft(x) # MoĹźe da rade lepiej?
+    dft(x) # Moze da rade lepiej?
 end
 
 function ifft(X::AbstractVector)::Vector
-    idft(X) # MoĹźe da rade lepiej?
+    idft(X) # Moze da rade lepiej?
 end
 
 end
