@@ -180,6 +180,10 @@ function kronecker(n)
         return 0
     end
 end
+##
+kronecker(n::Integer)::Real = n == 0 ? 1 : 0
+x = 0
+@show kronecker(x)
 
 ## problem 2.23
 ##
@@ -191,6 +195,10 @@ function heaviside(n)
         return 1
     end
 end
+##
+heaviside(n::Integer)::Real = n<0 ? 0 : 1
+x = 2
+@show heaviside(x)
 
 # problem 2.26
 ##
