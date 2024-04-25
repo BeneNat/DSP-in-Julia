@@ -102,16 +102,37 @@ end
 # problem 2.7
 ##
 # impuls przypominajacy literke "M" o szerokosci T w chwili t
-using Plots
-
-function cw_literka_M(t, T)
-
+using CairoMakie
+function cw_literka_M(t::Real, T)::Real
+    t_mod = t % 1  # Modulo 1, aby zachować okresowość sygnału
+    if t < 0 || t >= T
+        return 0.0
+    elseif t < T/4
+        return (4/T)* t_mod
+    elseif t > T/4 && t < T/2
+        #return 4*(0.5 - t_mod)
+        return -2*t + (T+2)/2
+    elseif t > T/2 && t < 3*T/4
+        #return -4*(0.5 - t_mod)
+        return 2*t - T + 0.5
+    else
+        return 4*(1 - t_mod)
+    end
 end
+
+czas_trwania = 1.0  # Trwający czas
+czestotliwosc_probkowania = 1000  # Próbkowanie co 1 ms
+liczba_probek = round(Int, czas_trwania * czestotliwosc_probkowania)
+wektor_czasu = collect(range(0, czas_trwania, length=liczba_probek))
+sygnal = [cw_literka_M(t, czas_trwania) for t in wektor_czasu]
+
+lines(wektor_czasu, sygnal)
 
 # problem 2.10
 ##
 # wart. okresowego syg. fali piloksztaltenej z opad. zboczem w chwili t
-using Plots
+#using Plots
+using CairoMakie
 
 function sawtooth_wave(t)
     # Obliczamy wartość fali piłokształtnej w chwili t
@@ -127,8 +148,8 @@ wektor_czasu = collect(range(0, czas_trwania, length=liczba_probek))
 sygnal_piłokształtny = [sawtooth_wave(t) for t in wektor_czasu]
 
 # Wykres
-plot(wektor_czasu, sygnal_piłokształtny, xlabel="Czas", ylabel="Amplituda", label="Fala piłokształtna", legend=:bottomright)
-
+#plot(wektor_czasu, sygnal_piłokształtny, xlabel="Czas", ylabel="Amplituda", label="Fala piłokształtna", legend=:bottomright)
+lines(wektor_czasu, sygnal_piłokształtny)
 
 # problem 2.11
 ##
@@ -159,16 +180,29 @@ plot(wektor_czasu, sygnal_trójkątny, xlabel="Czas", ylabel="Amplituda", label=
 # problem 2.14
 ##
 # impulse reapeter
-function impulse_reapeter()
-    
+function impulse_reapeter(g::Function, t1::Real, t2::Real)::Function
+    T = t2 - t1
+    f(t)=g(mod(t - t1, T) + t1)
+    return f
 end
 
 # problem 2.15
 ##
 # wart. okresowego syg. fali piloksztaltenej z narast. zboczem w chwili t
-function ramp_wave()
-    
+using CairoMakie
+
+function ramp_wave(t)
+    t_mod = t % 1  # Modulo 1, aby zachować okresowość sygnału
+    return -2 * (0.5 - t_mod)
 end
+
+czas_trwania = 2.0  # Trwający czas
+czestotliwosc_probkowania = 1000  # Próbkowanie co 1 ms
+liczba_probek = round(Int, czas_trwania * czestotliwosc_probkowania)
+wektor_czasu = collect(range(0, czas_trwania, length=liczba_probek))
+sygnal_trojkatny_odwrocony = [ramp_wave(t) for t in wektor_czasu]
+
+lines(wektor_czasu, sygnal_trojkatny_odwrocony)
 
 # problem 2.22
 ##
