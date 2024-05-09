@@ -5,8 +5,29 @@
 # problem 6.1
 ##
 # 2-DFT
+using LinearAlgebra
+
+x = [20 5]
+M, N = size(x)
+
+X = zeros(ComplexF64, M, N)
+
+for k in 0:M-1
+    for l in 0:N-1
+        sum_value = zero(ComplexF64)
+        for m in 0:M-1
+            for n in 0:N-1
+                sum_value += x[m+1, n+1] * exp(-im * 2π * ((k*m)/M + (l*n)/N))
+            end
+        end
+        X[k+1, l+1] = sum_value
+    end
+end
+
+println("Wynikowa 2-DFT sygnalu x: ", X)
+
 # do sprawdzenia
-x = [20, 5]
+#= x = [20, 5]
 N = length(x)
 A = zeros(N)
 wn = exp(im * (2 * π/N))
@@ -15,13 +36,30 @@ for k in 1:length(A)
         A[k] = x[n] * wn^(-k * n)
     end
 end
-@show A
+@show A =#
 
 # problem 6.2
 ##
 # 4-DFT
-# do sprawdzenia
+using LinearAlgebra
+
 x = [3, 2, 5, 1]
+
+N = length(x)
+X = zeros(ComplexF64, N)
+
+for k in 0:N-1
+    sum_value = zero(ComplexF64)
+    for n in 0:N-1
+        sum_value += x[n+1] * exp(-im * 2π * k * n / N)
+    end
+    X[k+1] = sum_value
+end
+
+println("Wynikowa 4-DFT sygnalu x: ", X)
+
+# do sprawdzenia
+#= x = [3, 2, 5, 1]
 N = length(x)
 A = zeros(N)
 wn = exp(im * (2 * π/N))
@@ -30,7 +68,7 @@ for k in 1:length(A)
         A[k] = x[n] * wn^(-k * n)
     end
 end
-@show A
+@show A =#
 
 # problem 6.4
 ##
