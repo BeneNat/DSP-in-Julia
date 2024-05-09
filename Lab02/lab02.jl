@@ -66,7 +66,7 @@ end
 # wart. miedzyszczytowa syg. dysk.
 function peak2peak(x)
     # normalne
-    miedzyszczytowa = max(x) - min(x)
+    miedzyszczytowa = abs(max(x) - min(x))
     return miedzyszczytowa
     # co byloby gdyby obydwie wart byly ujemne
     # to samo bo max = -1 min = -4 to bedzie -1 - (-4) = 3
@@ -103,7 +103,8 @@ end
 ##
 # impuls przypominajacy literke "M" o szerokosci T w chwili t
 using CairoMakie
-function cw_literka_M(t::Real, T)::Real
+
+#= function cw_literka_M(t::Real, T)::Real
     t_mod = t % 1  # Modulo 1, aby zachować okresowość sygnału
     if t < 0 || t >= T
         return 0.0
@@ -117,6 +118,20 @@ function cw_literka_M(t::Real, T)::Real
         return 2*t - T + 0.5
     else
         return 4*(1 - t_mod)
+    end
+end =#
+
+ #cw_literka_M(t::Real; T=1.0)::Real = abs(t) < T ? (t < 0 ? -t + 1 : t + 1) : 0
+
+function cw_literka_M(t::Real; T = 1.0)
+    if abs(t) < T
+        if t < 0
+            return -t + 1
+        else
+            return t + 1
+        end
+    else
+        return 0.0
     end
 end
 
@@ -138,6 +153,7 @@ function sawtooth_wave(t)
     # Obliczamy wartość fali piłokształtnej w chwili t
     t_mod = t % 1  # Modulo 1, aby zachować okresowość sygnału
     return 2 * (0.5 - t_mod)
+    #return -2 * rem(t, 1, RoundNearest)
 end
 
 # Przygotowanie danych do wykresu
@@ -155,6 +171,7 @@ lines(wektor_czasu, sygnal_piłokształtny)
 ##
 # okr. syg. fali. trojkatnej w chwili t
 using Plots
+using CairoMakie
 
 function triangular_wave(t)
     # Obliczamy wartość fali trójkątnej w chwili t
@@ -172,19 +189,20 @@ czestotliwosc_probkowania = 1000  # Próbkowanie co 1 ms
 liczba_probek = round(Int, czas_trwania * czestotliwosc_probkowania)
 wektor_czasu = collect(range(0, czas_trwania, length=liczba_probek))
 sygnal_trójkątny = [triangular_wave(t) for t in wektor_czasu]
-
+lines(wektor_czasu, sygnal_trójkątny)
 # Wykres
-plot(wektor_czasu, sygnal_trójkątny, xlabel="Czas", ylabel="Amplituda", label="Fala trójkątna", legend=:bottomright)
+#plot(wektor_czasu, sygnal_trójkątny, xlabel="Czas", ylabel="Amplituda", label="Fala trójkątna", legend=:bottomright)
 
 
 # problem 2.14
 ##
 # impulse reapeter
-function impulse_reapeter(g::Function, t1::Real, t2::Real)::Function
+impulse_repeater(g::Function, t1::Real, t2::Real)::Function = x -> g(mod(x - t1, t2 - t1) + t1)
+#= function impulse_reapeter(g::Function, t1::Real, t2::Real)::Function
     T = t2 - t1
     f(t)=g(mod(t - t1, T) + t1)
     return f
-end
+end =#
 
 # problem 2.15
 ##
@@ -194,6 +212,7 @@ using CairoMakie
 function ramp_wave(t)
     t_mod = t % 1  # Modulo 1, aby zachować okresowość sygnału
     return -2 * (0.5 - t_mod)
+    #return 2 * rem(t, 1, RoundNearest)
 end
 
 czas_trwania = 2.0  # Trwający czas
@@ -237,9 +256,21 @@ x = 2
 # problem 2.26
 ##
 # wektor z probkami dysk. okna Hanninga
+# hanning(N::Integer)::AbstractVector{<:Real} = [0.5(1 - cos(2π * n / (N - 1))) for n = 0:N-1]
 function hanning(N)
-    
+    for n = 0:N-1
+        return 0.5*(1-cos(2*π*n / (N-1)))
+    end
 end
+@show(hanning(2))
 
-##
-using Plots
+#= ##
+using CairoMakie
+cw_literka_M(t::Real; T=1.0)::Real = abs(t) < T ? (t < 0 ? -t + 1 : t + 1) : 0
+czas_trwania = 1.0  # Trwający czas
+czestotliwosc_probkowania = 1000  # Próbkowanie co 1 ms
+liczba_probek = round(Int, czas_trwania * czestotliwosc_probkowania)
+wektor_czasu = collect(range(0, czas_trwania, length=liczba_probek))
+sygnal = [cw_literka_M(t, czas_trwania) for t in wektor_czasu]
+
+lines(wektor_czasu, sygnal) =#
