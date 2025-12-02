@@ -1,0 +1,8 @@
+# Ignoruj pliki tymczasowe i systemowe
+.DS_Store
+.idea/
+*.ji
+*.cov
+
+# Ignoruj pliki audio (duże pliki)
+*.wav
