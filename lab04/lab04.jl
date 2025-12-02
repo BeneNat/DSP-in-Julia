@@ -134,7 +134,7 @@ function irdft(X)
     x = Array{Float64, 1}(undef, N)
     for n in 1:N
         x[n] = real(X[1])
-        for k in 2:length(X)
+        for k in 2:lastindex(X)
             x[n] += 2*real(X[k] * exp(2im * π * (k-1) * (n-1)/ N))
         end
         x[n] /= N

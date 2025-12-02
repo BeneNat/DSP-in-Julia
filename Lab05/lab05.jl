@@ -37,7 +37,7 @@ fs = 1/Δt
 #@show(arr)
 #@show(fs)
 ans = []
-for i in 1:length(arr)
+for i in 1:lastindex(arr)
     push!(ans, (arr[i]*fs)/N)
 end
 @show(ans)
