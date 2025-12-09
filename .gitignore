@@ -1,8 +1,11 @@
-# Ignoruj pliki tymczasowe i systemowe
+# Ignore temporary and system files
 .DS_Store
 .idea/
 *.ji
 *.cov
 
-# Ignoruj pliki audio (duże pliki)
+# Ignore audio files (large files)
 *.wav
+
+# Ignore task set
+zpipbd.pdf
